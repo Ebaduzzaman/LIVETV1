@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Video Player</title>
-	
+	<title>Video Example</title>
 </head>
 <body>
-<iframe src="https://prod-sports-eng-gm.jiocinema.com/hls/live/2098999/hd_akamai_androidmob_avc_eng_ipl09/master_720p.m3u8" style="border:0px #ffffff solid;" name="myiFrame" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="400px" width="600px" allowfullscreen></iframe>
-	
+	<h1>My Video</h1>
+	<video width="640" height="360" controls>
+		<source src="https://prod-sports-eng-gm.jiocinema.com/hls/live/2098999/hd_akamai_androidmob_avc_eng_ipl09/master_720p.m3u8" type="video/mp4">
+		<source src="video.webm" type="video/webm">
+		Your browser does not support the video tag.
+	</video>
 </body>
 </html>
