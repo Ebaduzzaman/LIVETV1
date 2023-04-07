@@ -12,22 +12,51 @@ ramonmorcillo.com
     <link rel="stylesheet" href="live.css">
 </head>
 
-<body>
-    <h3>IPL LIVE</h3>
-    <div class="player">
-        <video class="player__video viewer" src="https://video-weaver.sin04.hls.ttvnw.net/v1/playlist/CuoERxIDOaf6C7IQjCUd0g7IxaBp-hxeuoPpHnogbr4anTY0PjAl0w59DFnOCFFdboStZdpmYcl5y7M0rqhYQUTh-LqQsj-WQRDz2wtzMLW138p7QjszQNXMZT7R7TOdr-Nwtj6sttTP_jljEleZIRiUH3TFp2Mo2ZSztkd-FhrFdrJ0DX2LJMP2OZSUTMRvEcHPd33hATTzGdrgUNsjZ2ZAqEiBQkmCJllh7iyePipUM0JjYOHiYJp0j7MIdyQREN5jfWTAYbs_AoNb2shD9AhAr19DXCMbsXzgOHAmjrDPIDYeNaO3WfOnZCfEawUM2JsQQMbRJTfVMzF6W8gc3606sSVQvppgUfGz2Mq9jvyVwvJLp1dW92LUDbg0PEXf8m7eJVAai3JC_rF8IBEzJsQ9JEpnxxdc7W5L67UX4FkA21W4YuofaTDEKLdWg0Ie5PdGl1ANp8R8-jY7dsahEU8tzN0NouWX4kqLpETt9yxakD6gUiKQGI2qkJ4kbLLFy6NIvArYy-Xa4_8kOb9jGYQYnnE1MB3ldnOiq21HS4mzSkCupBwHU6DuS6ogw2oeV4hvrtY7mNv_X5PErXdq-Evm64VJz3cX4amz15cZqvaeqA0vGdAX_4uRNKD0wETx6_guFWJkVAv1o_5iHscJe91ktJVnJhT7Ppmkgq9ceStVSqlPbkiS1r6Q1dJW-g2wm_GJAIFyfbkWba71k2_t53rYTNH9XMAfEMPFLJgPMOo3tRZ67QTfVs6G2hjkpfRBOVNznlwzG-4T_oK8zuyZ31PDyKfd1Q97ko3NggPBuVK_8lLYPtrOry5Hj61NGgz1A-BlNBeWAIv0PVEgASoJdXMtd2VzdC0yMKIG.m3u8"></video>
-
-        <div class="player__controls">
-            <div class="progress">
-                <div class="progress__filled"></div>
+<a class="git-icon" href="https://github.com/vaibhav1663" target="_blank">
+        <img src="https://github.com/fluidicon.png" alt="">
+    </a>
+    <video src="https://video-weaver.sin04.hls.ttvnw.net/v1/playlist/CuoERxIDOaf6C7IQjCUd0g7IxaBp-hxeuoPpHnogbr4anTY0PjAl0w59DFnOCFFdboStZdpmYcl5y7M0rqhYQUTh-LqQsj-WQRDz2wtzMLW138p7QjszQNXMZT7R7TOdr-Nwtj6sttTP_jljEleZIRiUH3TFp2Mo2ZSztkd-FhrFdrJ0DX2LJMP2OZSUTMRvEcHPd33hATTzGdrgUNsjZ2ZAqEiBQkmCJllh7iyePipUM0JjYOHiYJp0j7MIdyQREN5jfWTAYbs_AoNb2shD9AhAr19DXCMbsXzgOHAmjrDPIDYeNaO3WfOnZCfEawUM2JsQQMbRJTfVMzF6W8gc3606sSVQvppgUfGz2Mq9jvyVwvJLp1dW92LUDbg0PEXf8m7eJVAai3JC_rF8IBEzJsQ9JEpnxxdc7W5L67UX4FkA21W4YuofaTDEKLdWg0Ie5PdGl1ANp8R8-jY7dsahEU8tzN0NouWX4kqLpETt9yxakD6gUiKQGI2qkJ4kbLLFy6NIvArYy-Xa4_8kOb9jGYQYnnE1MB3ldnOiq21HS4mzSkCupBwHU6DuS6ogw2oeV4hvrtY7mNv_X5PErXdq-Evm64VJz3cX4amz15cZqvaeqA0vGdAX_4uRNKD0wETx6_guFWJkVAv1o_5iHscJe91ktJVnJhT7Ppmkgq9ceStVSqlPbkiS1r6Q1dJW-g2wm_GJAIFyfbkWba71k2_t53rYTNH9XMAfEMPFLJgPMOo3tRZ67QTfVs6G2hjkpfRBOVNznlwzG-4T_oK8zuyZ31PDyKfd1Q97ko3NggPBuVK_8lLYPtrOry5Hj61NGgz1A-BlNBeWAIv0PVEgASoJdXMtd2VzdC0yMKIG.m3u8" poster="https://vaibhav1663.github.io/Youtube-Ambient-Mode/poster.jpg" id="blurred"></video>
+    <div class="container show-controls">
+        <div class="wrapper">
+            <div class="video-timeline">
+                <div class="progress-area">
+                    <span>00:00</span>
+                    <div class="progress-bar"></div>
+                </div>
             </div>
-            <button class="player__button toggle" title="Toggle Play">►</button>
-            <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="1">
-            <input type="range" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.1" value="1">
-            <button data-skip="-10" class="player__button">« 10s</button>
-            <button data-skip="25" class="player__button">25s »</button>
+            <ul class="video-controls">
+                <li class="options left">
+                    <button class="volume"><i class="fa-solid fa-volume-high"></i></button>
+                    <input type="range" min="0" max="1" step="any">
+                    <div class="video-timer">
+                        <p class="current-time">00:00</p>
+                        <p class="separator"> / </p>
+                        <p class="video-duration">00:00</p>
+                    </div>
+                </li>
+                <li class="options center">
+                    <button class="skip-backward"><i class="fas fa-backward"></i></button>
+                    <button class="play-pause"><i class="fas fa-play"></i></button>
+                    <button class="skip-forward"><i class="fas fa-forward"></i></button>
+                </li>
+                <li class="options right">
+                    <div class="playback-content">
+                        <button class="playback-speed"><span class="material-symbols-rounded">slow_motion_video</span></button>
+                        <ul class="speed-options">
+                            <li data-speed="2">2x</li>
+                            <li data-speed="1.5">1.5x</li>
+                            <li data-speed="1" class="active">Normal</li>
+                            <li data-speed="0.75">0.75x</li>
+                            <li data-speed="0.5">0.5x</li>
+                        </ul>
+                    </div>
+                    <button class="fullscreen"><i class="fa-solid fa-expand"></i></button>
+                </li>
+            </ul>
         </div>
+        <video src="https://vaibhav1663.github.io/Youtube-Ambient-Mode/demo-video.mp4" poster="https://vaibhav1663.github.io/Youtube-Ambient-Mode/poster.jpg"></video>
     </div>
+    <script src="script.js"></script>
 
     <script src="script.js"></script>
 </body>
