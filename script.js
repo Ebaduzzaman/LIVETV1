@@ -1,133 +1,256 @@
-const container = document.querySelector(".container"),
-blurvid = document.querySelector("video"),
-mainVideo = container.querySelector("video"),
-videoTimeline = container.querySelector(".video-timeline"),
-progressBar = container.querySelector(".progress-bar"),
-volumeBtn = container.querySelector(".volume i"),
-volumeSlider = container.querySelector(".left input");
-currentVidTime = container.querySelector(".current-time"),
-videoDuration = container.querySelector(".video-duration"),
-skipBackward = container.querySelector(".skip-backward i"),
-skipForward = container.querySelector(".skip-forward i"),
-playPauseBtn = container.querySelector(".play-pause i"),
-speedBtn = container.querySelector(".playback-speed span"),
-speedOptions = container.querySelector(".speed-options"),
-fullScreenBtn = container.querySelector(".fullscreen i");
-let timer;
+var mainFunction =
+{
+    elements: {
+        container: ".container",
+        containerInner: ".container-inner",
+        videoPlayerContainer: ".video-player-container",
+        videoContainer: ".video-container",
+        playerContainer: ".player-container",
+        mediaVideo: "#media-video",
+        playControl: ".play-control",
+        playButton: ".play-button",
+        pauseButton: ".pause-button",
+        volumeControl: ".volume-control",
+        volumeButton: ".volume-button",
+        volumeButtonMute: ".volume-button-mute",
+        progress: ".progress",
+        progressOver: ".progress-over",
+        progressHidden: ".progress-hidden",
+        progressBackground: ".progress-background",
+        indicator: ".indicator",
+        fullScreenButton: ".fullscreen-button"
+    },
 
-const hideControls = () => {
-    if(mainVideo.paused) return;
-    timer = setTimeout(() => {
-        container.classList.remove("show-controls");
-    }, 3000);
-}
-hideControls();
-blurvid.volume = 0;
-container.addEventListener("mousemove", () => {
-    container.classList.add("show-controls");
-    clearTimeout(timer);
-    hideControls();   
-});
+    isPlay: false,
+    isVolume: true,
+    isEnd: false,
+    progressBarHeight: 100,
 
-const formatTime = time => {
-    let seconds = Math.floor(time % 60),
-    minutes = Math.floor(time / 60) % 60,
-    hours = Math.floor(time / 3600);
+    init: function () {
+        mainFunction.defaultSettings();
+        mainFunction.clickSettings();
+        mainFunction.playControlVideo();
+        mainFunction.volumeControlVideo();
+        mainFunction.progressControlVideo();
+        mainFunction.mouseHideControl();
+    },
 
-    seconds = seconds < 10 ? `0${seconds}` : seconds;
-    minutes = minutes < 10 ? `0${minutes}` : minutes;
-    hours = hours < 10 ? `0${hours}` : hours;
+    defaultSettings: function () {
 
-    if(hours == 0) {
-        return `${minutes}:${seconds}`
+        $(mainFunction.elements.mediaVideo)[0].controls = false;
+
+        $(window).on("resize", onResize);
+
+        function onResize() {
+            $(mainFunction.elements.progress).width($(mainFunction.elements.playerContainer).width() - 223);
+            $(mainFunction.elements.progressBackground).width($(mainFunction.elements.playerContainer).width() - 223 - 40);
+            $(mainFunction.elements.progressHidden).width($(mainFunction.elements.playerContainer).width() - 223 - 40);
+            mainFunction.progressBarHeight = $(mainFunction.elements.playerContainer).width() - 223 - 40;
+            $(mainFunction.elements.progressOver).css("width", String((mainFunction.progressBarHeight / $(mainFunction.elements.mediaVideo)[0].duration) * $(mainFunction.elements.mediaVideo)[0].currentTime));
+        }
+
+        onResize();
+
+    },
+
+    clickSettings: function () {
+        $(mainFunction.elements.playControl).on("click", mainFunction.playControlVideo);
+        $(mainFunction.elements.volumeControl).on("click", mainFunction.volumeControlVideo);
+        $(mainFunction.elements.mediaVideo).on("click", mainFunction.playControlVideo);
+        $(mainFunction.elements.fullScreenButton).on("click", mainFunction.fullScreenControl);
+        $("body").on("keyup", function (e) { if (e.which == 27) { mainFunction.exitFullScreen(); } });
+    },
+
+    fullScreenControl: function () {
+
+        if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+                mainFunction.onFullScreen();
+            }
+            else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+                mainFunction.onFullScreen();
+            }
+            else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+                mainFunction.onFullScreen();
+            }
+            else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                mainFunction.onFullScreen();
+            }
+        }
+        else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                mainFunction.exitFullScreen();
+            }
+            else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+                mainFunction.exitFullScreen();
+            }
+            else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+                mainFunction.exitFullScreen();
+            }
+            else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+                mainFunction.exitFullScreen();
+            }
+        }
+    },
+
+    onFullScreen: function () {
+
+        $(mainFunction.elements.progressOver).css("width", String((mainFunction.progressBarHeight / $(mainFunction.elements.mediaVideo)[0].duration) * $(mainFunction.elements.mediaVideo)[0].currentTime));
+        $(mainFunction.elements.container).css("display", "block");
+        $(mainFunction.elements.videoPlayerContainer).width("100%");
+        $(mainFunction.elements.videoPlayerContainer).height("100%");
+        $(mainFunction.elements.videoContainer).height("calc(100% - 40px)");
+        $(mainFunction.elements.progress).width($(mainFunction.elements.playerContainer).width() - 223);
+        $(mainFunction.elements.progressBackground).width($(mainFunction.elements.playerContainer).width() - 223 - 40);
+        $(mainFunction.elements.progressHidden).width($(mainFunction.elements.playerContainer).width() - 223 - 40);
+        mainFunction.progressBarHeight = $(mainFunction.elements.playerContainer).width() - 223 - 40;
+        $(".container-inner").css("display", "none");
+
+    },
+
+    exitFullScreen: function () {
+
+        $(mainFunction.elements.container).css("display", "-webkit-box");
+        $(mainFunction.elements.container).css("display", "-moz-box");
+        $(mainFunction.elements.container).css("display", "-ms-flexbox");
+        $(mainFunction.elements.container).css("display", "-webkit-flex");
+        $(mainFunction.elements.container).css("display", "flex");
+        $(mainFunction.elements.videoPlayerContainer).width("648");
+        $(mainFunction.elements.videoPlayerContainer).height("350");
+        $(mainFunction.elements.videoContainer).height("310");
+        $(mainFunction.elements.progress).width($(mainFunction.elements.playerContainer).width() - 223);
+        $(mainFunction.elements.progressBackground).width($(mainFunction.elements.playerContainer).width() - 223 - 40);
+        $(mainFunction.elements.progressHidden).width($(mainFunction.elements.playerContainer).width() - 223 - 40);
+        mainFunction.progressBarHeight = $(mainFunction.elements.playerContainer).width() - 223 - 40;
+        $(mainFunction.elements.progressOver).css("width", String((mainFunction.progressBarHeight / $(mainFunction.elements.mediaVideo)[0].duration) * $(mainFunction.elements.mediaVideo)[0].currentTime));
+        $(".container-inner").css("display", "inherit");
+
+    },
+
+    mouseHideControl: function () {
+
+        var mouseHide = setTimeout(onMouseHide, 3000);
+
+        $(mainFunction.elements.containerInner).on("mousemove", function () {
+
+            clearTimeout(mouseHide);
+
+            onMouseShow();
+
+        });
+
+        $(mainFunction.elements.containerInner).on("mousemoveend", function () {
+
+            clearTimeout(mouseHide);
+
+            mouseHide = setTimeout(onMouseHide, 3000);
+
+        });
+
+        function onMouseHide() { $("body").css("cursor", "none"); }
+
+        function onMouseShow() { $("body").css("cursor", "inherit"); }
+
+    },
+
+    playControlVideo: function () {
+        if (mainFunction.isPlay) { $(mainFunction.elements.mediaVideo)[0].play(); } else { $(mainFunction.elements.mediaVideo)[0].pause(); }
+        $(mainFunction.elements.playButton).css("display", ((mainFunction.isPlay) ? "none" : "table-cell"));
+        $(mainFunction.elements.pauseButton).css("display", ((!mainFunction.isPlay) ? "none" : "table-cell"));
+        mainFunction.isPlay = !mainFunction.isPlay;
+        mainFunction.isEnd = false;
+    },
+
+    volumeControlVideo: function () {
+        $(mainFunction.elements.mediaVideo)[0].muted = !mainFunction.isVolume;
+        $(mainFunction.elements.volumeButtonMute).css("display", ((mainFunction.isVolume) ? "none" : "table-cell"));
+        $(mainFunction.elements.volumeButton).css("display", ((!mainFunction.isVolume) ? "none" : "table-cell"));
+        mainFunction.isVolume = !mainFunction.isVolume;
+    },
+
+    progressControlVideo: function () {
+
+        var mouseX = 0;
+        var isDown = false;
+        var currentMinute = 0;
+        var currentSecond = 0;
+        var mediaPlayer = $(mainFunction.elements.mediaVideo)[0];
+
+        mediaPlayer.addEventListener("timeupdate", onProgressVideo, false);
+
+        function onProgressVideo() {
+            $(mainFunction.elements.progressOver).css("width", String((mainFunction.progressBarHeight / mediaPlayer.duration) * mediaPlayer.currentTime));
+            videoEndControl();
+            setIndicator(mediaPlayer.currentTime, mediaPlayer.duration);
+        }
+
+        function videoEndControl() {
+            if (mediaPlayer.currentTime >= mediaPlayer.duration) {
+                mainFunction.isPlay = false;
+                mainFunction.playControlVideo();
+                mainFunction.isEnd = true;
+            }
+        }
+
+        function setIndicator(current, duration) {
+            var durationMinute = Math.floor(duration / 60);
+            var durationSecond = Math.floor(duration - durationMinute * 60);
+            var durationLabel = durationMinute + ":" + durationSecond;
+            currentSecond = Math.floor(current);
+            currentMinute = Math.floor(currentSecond / 60);
+            currentSecond = currentSecond - (currentMinute * 60);
+            currentSecond = (String(currentSecond).length > 1) ? currentSecond : (String("0") + currentSecond);
+            var currentLabel = currentMinute + ":" + currentSecond;
+            var indicatorLabel = currentLabel + " / " + durationLabel;
+            $(mainFunction.elements.indicator).text(indicatorLabel);
+        }
+
+        $(mainFunction.elements.progressHidden).on("mousemove", onProgressHiddenMouseMove);
+
+        function onProgressHiddenMouseMove(e) {
+            var parentOffset = $(this).parent().offset();
+            mouseX = Math.floor(e.pageX - parentOffset.left - 20);
+            if (isDown) { mediaPlayer.currentTime = (mediaPlayer.duration / mainFunction.progressBarHeight) * mouseX; }
+        }
+
+        $(mainFunction.elements.progressHidden).on("click", function () { if (!isDown) { mediaPlayer.currentTime = (mediaPlayer.duration / mainFunction.progressBarHeight) * mouseX; } });
+
+        $(mainFunction.elements.progressHidden).on("mousedown", onProgressHiddenMouseDown);
+
+        function onProgressHiddenMouseDown() {
+
+            isDown = true;
+
+            mediaPlayer.currentTime = (mediaPlayer.duration / mainFunction.progressBarHeight) * mouseX;
+
+            $(mainFunction.elements.mediaVideo)[0].pause();
+        }
+
+        $(mainFunction.elements.progressHidden).on("mouseup", function () { isDown = false; if (!mainFunction.isEnd) { mainFunction.isPlay = true; mainFunction.playControlVideo(); } });
+
+        $(mainFunction.elements.progressHidden).on("mouseout", function () { isDown = false; if (!mainFunction.isEnd) { mainFunction.isPlay = true; mainFunction.playControlVideo(); } });
+
     }
-    return `${hours}:${minutes}:${seconds}`;
-}
+};
 
-videoTimeline.addEventListener("mousemove", e => {
-    let timelineWidth = videoTimeline.clientWidth;
-    let offsetX = e.offsetX;
-    let percent = Math.floor((offsetX / timelineWidth) * mainVideo.duration);
-    const progressTime = videoTimeline.querySelector("span");
-    offsetX = offsetX < 20 ? 20 : (offsetX > timelineWidth - 20) ? timelineWidth - 20 : offsetX;
-    progressTime.style.left = `${offsetX}px`;
-    progressTime.innerText = formatTime(percent);
-});
+$(document).on("ready", mainFunction.init);
 
-videoTimeline.addEventListener("click", e => {
-    let timelineWidth = videoTimeline.clientWidth;
-    mainVideo.currentTime = (e.offsetX / timelineWidth) * mainVideo.duration;
-    blurvid.currentTime = (e.offsetX / timelineWidth) * mainVideo.duration;
-});
-
-mainVideo.addEventListener("timeupdate", e => {
-    let {currentTime, duration} = e.target;
-    let percent = (currentTime / duration) * 100;
-    progressBar.style.width = `${percent}%`;
-    currentVidTime.innerText = formatTime(currentTime);
-});
-
-mainVideo.addEventListener("loadeddata", () => {
-    videoDuration.innerText = formatTime(mainVideo.duration);
-});
-
-const draggableProgressBar = e => {
-    let timelineWidth = videoTimeline.clientWidth;
-    progressBar.style.width = `${e.offsetX}px`;
-    mainVideo.currentTime = (e.offsetX / timelineWidth) * mainVideo.duration;
-    blurvid.currentTime = (e.offsetX / timelineWidth) * mainVideo.duration;
-    currentVidTime.innerText = formatTime(mainVideo.currentTime);
-}
-
-volumeBtn.addEventListener("click", () => {
-    if(!volumeBtn.classList.contains("fa-volume-high")) {
-        mainVideo.volume = 0.5;
-        volumeBtn.classList.replace("fa-volume-xmark", "fa-volume-high");
-    } else {
-        mainVideo.volume = 0.0;
-        volumeBtn.classList.replace("fa-volume-high", "fa-volume-xmark");
-    }
-    volumeSlider.value = mainVideo.volume;
-});
-
-volumeSlider.addEventListener("input", e => {
-    mainVideo.volume = e.target.value;
-    if(e.target.value == 0) {
-        return volumeBtn.classList.replace("fa-volume-high", "fa-volume-xmark");
-    }
-    volumeBtn.classList.replace("fa-volume-xmark", "fa-volume-high");
-});
-
-speedOptions.querySelectorAll("li").forEach(option => {
-    option.addEventListener("click", () => {
-        mainVideo.playbackRate = option.dataset.speed;
-        blurvid.playbackRate = option.dataset.speed;
-        speedOptions.querySelector(".active").classList.remove("active");
-        option.classList.add("active");
+(function ($) {
+    var timeout;
+    $(document).on('mousemove', function (event) {
+        if (timeout !== undefined) {
+            window.clearTimeout(timeout);
+        }
+        timeout = window.setTimeout(function () {
+            $(event.target).trigger('mousemoveend');
+        }, 100);
     });
-});
-
-document.addEventListener("click", e => {
-    if(e.target.tagName !== "SPAN" || e.target.className !== "material-symbols-rounded") {
-        speedOptions.classList.remove("show");
-    }
-});
-
-fullScreenBtn.addEventListener("click", () => {
-    container.classList.toggle("fullscreen");
-    if(document.fullscreenElement) {
-        fullScreenBtn.classList.replace("fa-compress", "fa-expand");
-        return document.exitFullscreen();
-    }
-    fullScreenBtn.classList.replace("fa-expand", "fa-compress");
-    container.requestFullscreen();
-});
-
-speedBtn.addEventListener("click", () => speedOptions.classList.toggle("show"));
-skipBackward.addEventListener("click", () => {mainVideo.currentTime -= 5 ; blurvid.currentTime -= 5});
-skipForward.addEventListener("click", () => {mainVideo.currentTime += 5; blurvid.currentTime += 5});
-mainVideo.addEventListener("play", () => playPauseBtn.classList.replace("fa-play", "fa-pause"));
-mainVideo.addEventListener("pause", () => playPauseBtn.classList.replace("fa-pause", "fa-play"));
-playPauseBtn.addEventListener("click", () => {mainVideo.paused ? mainVideo.play() : mainVideo.pause(); blurvid.paused ? blurvid.play() : blurvid.pause()});
-videoTimeline.addEventListener("mousedown", () => videoTimeline.addEventListener("mousemove", draggableProgressBar));
-document.addEventListener("mouseup", () => videoTimeline.removeEventListener("mousemove", draggableProgressBar));
+}(jQuery));
